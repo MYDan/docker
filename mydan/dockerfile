@@ -1,14 +1,9 @@
 #This is MYDan Dockerfile#version 1.0
 #Author: lijinfeng2011@gmail.com
 #Base image 基础镜像
-FROM centos:latest
+FROM mydan/base:latest
 #MAINTAINER 维护者信息
 MAINTAINER lijinfeng2011
-#ADD
-COPY mysql-community.repo mysql-community-source.repo /etc/yum.repos.d/
-#COPY mysql-community-source.repo /etc/yum.repos.d/
-RUN yum -y install mysql-server make git
-#RUN /usr/bin/mysql_install_db  --basedir=/usr --datadir=/var/lib/mysql  --user=mysql
 
 ADD entrypoint.sh /
 COPY perl.tar.gz /
@@ -38,4 +33,4 @@ RUN chmod +x /home/work/mydan/dan/bootstrap/exec/*
 
 WORKDIR / 
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT [ "/entrypoint.sh" ]

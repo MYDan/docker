@@ -1,0 +1,9 @@
+#This is MYDan Dockerfile#version 1.0
+#Author: lijinfeng2011@gmail.com
+#Base image 基础镜像
+
+FROM centos:latest
+MAINTAINER lijinfeng2011
+COPY mysql-community.repo mysql-community-source.repo /etc/yum.repos.d/
+RUN yum -y install mysql-server make git
+
