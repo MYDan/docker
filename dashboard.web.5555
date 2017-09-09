@@ -1,0 +1,12 @@
+#!/bin/sh
+
+ulimit -n 655350;ulimit -u 102400;ulimit -s 10240;
+
+NAME=$(basename "$0")
+BASE=$(dirname "$0")
+APPS=$(echo $NAME|awk -F. '{print $1}')
+PORT=$(echo $NAME|awk -F. '{print $NF}')
+
+
+cd $BASE/../../../$APPS/bin || exit;
+exec $MYDanPATH/perl/bin/twiggy ./app.pl -p $PORT

@@ -1,0 +1,41 @@
+#This is MYDan Dockerfile#version 1.0
+#Author: lijinfeng2011@gmail.com
+#Base image 基础镜像
+FROM centos:latest
+#MAINTAINER 维护者信息
+MAINTAINER lijinfeng2011
+#ADD
+COPY mysql-community.repo mysql-community-source.repo /etc/yum.repos.d/
+#COPY mysql-community-source.repo /etc/yum.repos.d/
+RUN yum -y install mysql-server make git
+#RUN /usr/bin/mysql_install_db  --basedir=/usr --datadir=/var/lib/mysql  --user=mysql
+
+ADD entrypoint.sh /
+COPY perl.tar.gz /
+#RUN
+RUN tar -zxvf /perl.tar.gz -C /
+RUN chmod +x /entrypoint.sh
+#WORKDIR
+WORKDIR /home/work/mydan
+RUN git clone https://github.com/MYDan/mayi.git
+RUN git clone https://github.com/MYDan/sso.git
+RUN git clone https://github.com/MYDan/dashboard.git
+
+WORKDIR /home/work/mydan/mayi
+RUN /home/work/mydan/perl/bin/perl Makefile.PL
+RUN make && make test && make install box=1 dan=1 def=1 
+
+WORKDIR /home/work/mydan/sso
+RUN /home/work/mydan/perl/bin/perl Makefile.PL
+RUN make && make install
+
+WORKDIR /home/work/mydan/dashboard
+RUN /home/work/mydan/perl/bin/perl Makefile.PL
+RUN make && make install 
+
+COPY sso.web.8080 dashboard.web.5555 /home/work/mydan/dan/bootstrap/exec/
+RUN chmod +x /home/work/mydan/dan/bootstrap/exec/*
+
+WORKDIR / 
+
+ENTRYPOINT ["/entrypoint.sh"]
